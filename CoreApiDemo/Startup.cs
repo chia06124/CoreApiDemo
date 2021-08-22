@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreApiDemo.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,11 +23,12 @@ namespace CoreApiDemo
         }
 
         public IConfiguration Configuration { get; }
-
+        //更新資料表指令 Scaffold-DbContext "Server=(localdb)\MSSQLLocalDB;Database=EFDATA;Trusted_Connection=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<EFDATAContext>(options =>options.UseSqlServer(Configuration.GetConnectionString("EFDatabase")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
