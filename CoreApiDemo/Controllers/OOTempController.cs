@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using CoreApiDemo.DTO;
 using CoreApiDemo.Models;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,17 +17,22 @@ namespace CoreApiDemo.Controllers
     [ApiController]
     public class OOTempController : ControllerBase
     {
-        private readonly EFDATAContext _EFDATAContext;
+        //private readonly EFDATAContext _EFDATAContext;
+        private readonly IDbConnection _conn;
 
-        public OOTempController(EFDATAContext EFDATAContext)
+        public OOTempController(IDbConnection conn)
+
         {
-            _EFDATAContext = EFDATAContext;
+            //_EFDATAContext = EFDATAContext;
+            this._conn = conn;
         }
         // GET: api/<OOTempController>
         [HttpGet]
-        public IEnumerable<TaCompany> Get()
+        public IEnumerable<TaCompanyDTO> Get()
         {
-            return _EFDATAContext.TaCompanies;
+            string strSql = @" select * from TA_Company";
+            IEnumerable<TaCompanyDTO> TaCompany= _conn.Query<TaCompanyDTO>(strSql).ToList();
+            return TaCompany;
         }
 
         // GET api/<OOTempController>/5
