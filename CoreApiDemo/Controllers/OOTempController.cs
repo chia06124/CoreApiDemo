@@ -8,6 +8,7 @@ using CoreApiDemo.DTO;
 using CoreApiDemo.Models;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,22 +18,33 @@ namespace CoreApiDemo.Controllers
     [ApiController]
     public class OOTempController : ControllerBase
     {
-        //private readonly EFDATAContext _EFDATAContext;
-        private readonly IDbConnection _conn;
+        private readonly EFDATAContext _EFDATAContext;
+        //private readonly IDbConnection _conn;
 
-        public OOTempController(IDbConnection conn)
+        public OOTempController(EFDATAContext EFDATAContext)
 
         {
-            //_EFDATAContext = EFDATAContext;
-            this._conn = conn;
+            _EFDATAContext = EFDATAContext;
+            //this._conn = conn;
         }
         // GET: api/<OOTempController>
         [HttpGet]
         public IEnumerable<TaCompanyDTO> Get()
         {
-            string strSql = @" select * from TA_Company";
-            IEnumerable<TaCompanyDTO> TaCompany= _conn.Query<TaCompanyDTO>(strSql).ToList();
-            return TaCompany;
+            var temp = _EFDATAContext.TaCompanies.Include(a => a.TaSale01).Select(a => new TaCompanyDTO
+            {
+                Com = a.Com,
+                Cosy=a.Cosy,
+                ComName=a.ComName,
+                Status=a.Status,
+                Address=a.Address,
+                PhoneNo=a.PhoneNo,
+                Fax=a.Fax,
+                CreateDate=a.CreateDate,
+                UpdateDate=a.UpdateDate,
+                UpdateUerName=a.TaSale01.SalesName
+            }) ;
+            return temp;
         }
 
         // GET api/<OOTempController>/5

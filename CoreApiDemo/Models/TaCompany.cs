@@ -16,5 +16,7 @@ namespace CoreApiDemo.Models
         public string Fax { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+        public int UpdateUerId { get; set; }
+        public TaSale TaSale01 { get; set; } //反向導覽屬性
     }
 }

@@ -29,16 +29,18 @@ namespace CoreApiDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddControllers();
-            //services.AddDbContext<EFDATAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EFDatabase")));
-            services.AddScoped<IDbConnection, SqlConnection>(serviceProvider => {
-                SqlConnection conn = new SqlConnection();
-                //指派連線字串
-                conn.ConnectionString = Configuration.GetConnectionString("EFDatabase");
-                return conn;
-            });
+            services.AddControllers();
+            services.AddDbContext<EFDATAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EFDatabase")));
 
-            services.AddControllersWithViews();
+
+            //services.AddScoped<IDbConnection, SqlConnection>(serviceProvider => {
+            //    SqlConnection conn = new SqlConnection();
+            //    //指派連線字串
+            //    conn.ConnectionString = Configuration.GetConnectionString("EFDatabase");
+            //    return conn;
+            //});
+
+            //services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

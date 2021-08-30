@@ -16,5 +16,6 @@ namespace CoreApiDemo.DTO
         public string Fax { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+        public string UpdateUerName { get; set; }
     }
 }

@@ -20,5 +20,7 @@ namespace CoreApiDemo.Models
         public string Memo { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+
+        public List<TaCompany> TaCompany01 { get; set; } //參考導覽屬性
     }
 }

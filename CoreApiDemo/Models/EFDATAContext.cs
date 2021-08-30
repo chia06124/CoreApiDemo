@@ -34,12 +34,11 @@ namespace CoreApiDemo.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //            if (!optionsBuilder.IsConfigured)
-            //            {
-            //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-            //                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFDATA;Trusted_Connection=True");
-            //            }
-            
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFDATA;Trusted_Connection=True");
+//            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -989,32 +988,38 @@ namespace CoreApiDemo.Models
                     .HasComment("狀態(0:營業中;1:歇業)");
 
                 entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+
+                //entity.Property(e => e.UpdateUerId).HasColumnName("UpdateUerID");
+
+                entity.HasOne(d => d.TaSale01)
+                    .WithMany(p => p.TaCompany01)
+                    .HasForeignKey(d => d.UpdateUerId);
             });
 
             modelBuilder.Entity<TaSale>(entity =>
             {
-                entity.HasKey(e => new { e.Com, e.Dept, e.Sales, e.EmpNo, e.Status });
+                entity.HasKey(e => e.EmpNo)
+                    .HasName("PK_TA_Sales_1");
 
                 entity.ToTable("TA_Sales");
 
+                entity.Property(e => e.EmpNo)
+                    .ValueGeneratedNever()
+                    .HasComment("員工編號");
+
                 entity.Property(e => e.Com).HasComment("公司代號,參照TA_Company");
-
-                entity.Property(e => e.Dept).HasComment("部門代碼");
-
-                entity.Property(e => e.Sales).HasComment("營業員代號");
-
-                entity.Property(e => e.EmpNo).HasComment("員工編號");
-
-                entity.Property(e => e.Status).HasComment("狀態(0:正常;1:註銷)");
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())")
                     .HasComment("建檔日");
 
+                entity.Property(e => e.Dept).HasComment("部門代碼");
+
                 entity.Property(e => e.Memo)
                     .IsRequired()
                     .HasMaxLength(255)
+                    .IsUnicode(false)
                     .HasDefaultValueSql("('')")
                     .HasComment("備註");
 
@@ -1033,15 +1038,21 @@ namespace CoreApiDemo.Models
                     .IsUnicode(false)
                     .HasComment("營業員分機(多分機用空白間隔)");
 
+                entity.Property(e => e.Sales).HasComment("營業員代號");
+
                 entity.Property(e => e.SalesName)
                     .IsRequired()
-                    .HasMaxLength(50)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
                     .HasDefaultValueSql("('')")
                     .HasComment("姓名");
+
+                entity.Property(e => e.Status).HasComment("狀態(0:正常;1:註銷)");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(150)
+                    .IsUnicode(false)
                     .HasDefaultValueSql("('')")
                     .HasComment("職稱");
 
