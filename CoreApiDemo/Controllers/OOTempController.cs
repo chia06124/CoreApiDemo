@@ -29,9 +29,9 @@ namespace CoreApiDemo.Controllers
         }
         // GET: api/<OOTempController>
         [HttpGet]
-        public IEnumerable<TaCompanyDTO> Get()
+        public IActionResult Get()
         {
-            var temp = _EFDATAContext.TaCompanies.Include(a => a.TaSale01).Select(a => new TaCompanyDTO
+            var result = _EFDATAContext.TaCompanies.Include(a => a.TaSale01).Select(a => new TaCompanyDTO
             {
                 Com = a.Com,
                 Cosy=a.Cosy,
@@ -44,7 +44,12 @@ namespace CoreApiDemo.Controllers
                 UpdateDate=a.UpdateDate,
                 UpdateUerName=a.TaSale01.SalesName
             }) ;
-            return temp;
+
+            if (result==null || result.Count() == 0)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
 
         // GET api/<OOTempController>/5
