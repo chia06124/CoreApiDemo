@@ -31,6 +31,7 @@ namespace CoreApiDemo.Models
         public virtual DbSet<TaSale> TaSales { get; set; }
         public virtual DbSet<TaxResidency> TaxResidencies { get; set; }
         public virtual DbSet<TxnBank> TxnBanks { get; set; }
+        public virtual DbSet<ViwHsoasale> ViwHsoasales { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -989,11 +990,7 @@ namespace CoreApiDemo.Models
 
                 entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
-                //entity.Property(e => e.UpdateUerId).HasColumnName("UpdateUerID");
-
-                entity.HasOne(d => d.TaSale01)
-                    .WithMany(p => p.TaCompany01)
-                    .HasForeignKey(d => d.UpdateUerId);
+                entity.Property(e => e.UpdateUerId).HasColumnName("UpdateUerID");
             });
 
             modelBuilder.Entity<TaSale>(entity =>
@@ -1042,8 +1039,7 @@ namespace CoreApiDemo.Models
 
                 entity.Property(e => e.SalesName)
                     .IsRequired()
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
+                    .HasMaxLength(50)
                     .HasDefaultValueSql("('')")
                     .HasComment("姓名");
 
@@ -1052,7 +1048,6 @@ namespace CoreApiDemo.Models
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(150)
-                    .IsUnicode(false)
                     .HasDefaultValueSql("('')")
                     .HasComment("職稱");
 
@@ -1178,6 +1173,29 @@ namespace CoreApiDemo.Models
                 entity.Property(e => e.Serial)
                     .ValueGeneratedOnAdd()
                     .HasComment("資料序號");
+            });
+
+            modelBuilder.Entity<ViwHsoasale>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("viw_HSOASales");
+
+                entity.Property(e => e.Com)
+                    .IsRequired()
+                    .HasMaxLength(5)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ComName).HasMaxLength(50);
+
+                entity.Property(e => e.Market)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SalesName)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);

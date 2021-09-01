@@ -28,22 +28,25 @@ namespace CoreApiDemo.Controllers
             //this._conn = conn;
         }
         // GET: api/<OOTempController>
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("{comp_code}")]
+        public IActionResult Get(string comp_code)
         {
-            var result = _EFDATAContext.TaCompanies.Include(a => a.TaSale01).Select(a => new TaCompanyDTO
-            {
-                Com = a.Com,
-                Cosy=a.Cosy,
-                ComName=a.ComName,
-                Status=a.Status,
-                Address=a.Address,
-                PhoneNo=a.PhoneNo,
-                Fax=a.Fax,
-                CreateDate=a.CreateDate,
-                UpdateDate=a.UpdateDate,
-                UpdateUerName=a.TaSale01.SalesName
-            }) ;
+            //var result = _EFDATAContext.TaCompanies.Include(a => a.TaSale01).Select(a => new TaCompanyDTO
+            //{
+            //    Com = a.Com,
+            //    Cosy=a.Cosy,
+            //    ComName=a.ComName,
+            //    Status=a.Status,
+            //    Address=a.Address,
+            //    PhoneNo=a.PhoneNo,
+            //    Fax=a.Fax,
+            //    CreateDate=a.CreateDate,
+            //    UpdateDate=a.UpdateDate,
+            //    UpdateUerName=a.TaSale01.SalesName
+            //}) ;
+
+            //var result = from v in _EFDATAContext.ViwHsoasales select v;
+            var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com == comp_code);
 
             if (result==null || result.Count() == 0)
             {
@@ -53,11 +56,11 @@ namespace CoreApiDemo.Controllers
         }
 
         // GET api/<OOTempController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
 
         // POST api/<OOTempController>
         [HttpPost]
