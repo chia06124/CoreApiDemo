@@ -7,7 +7,7 @@ namespace CoreApiDemo.Models
 {
     public partial class ViwHsoasale
     {
-        public string Market { get; set; }
+        //public string Market { get; set; }
         public string Com { get; set; }
         public string ComName { get; set; }
         public int Sales { get; set; }

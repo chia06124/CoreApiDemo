@@ -9,64 +9,131 @@ using CoreApiDemo.Models;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CoreApiDemo.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/api/[controller]/[action]")]
     [ApiController]
     public class OOTempController : ControllerBase
     {
         private readonly EFDATAContext _EFDATAContext;
-        //private readonly IDbConnection _conn;
-
+        
         public OOTempController(EFDATAContext EFDATAContext)
-
         {
             _EFDATAContext = EFDATAContext;
-            //this._conn = conn;
         }
         // GET: api/<OOTempController>
-        [HttpGet("{comp_code}")]
-        public IActionResult Get(string comp_code)
+    
+        [HttpGet("{comp_code}", Name = "YYYY")]
+        public IActionResult YYYY(string comp_code)
         {
-            //var result = _EFDATAContext.TaCompanies.Include(a => a.TaSale01).Select(a => new TaCompanyDTO
-            //{
-            //    Com = a.Com,
-            //    Cosy=a.Cosy,
-            //    ComName=a.ComName,
-            //    Status=a.Status,
-            //    Address=a.Address,
-            //    PhoneNo=a.PhoneNo,
-            //    Fax=a.Fax,
-            //    CreateDate=a.CreateDate,
-            //    UpdateDate=a.UpdateDate,
-            //    UpdateUerName=a.TaSale01.SalesName
-            //}) ;
-
-            //var result = from v in _EFDATAContext.ViwHsoasales select v;
-            var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com == comp_code);
-
-            if (result==null || result.Count() == 0)
+            
+            string message = string.Empty;
+            IActionResult? actionResult =null;
+            try
             {
-                return NotFound();
+                if (comp_code == "" || comp_code == null)
+                {
+                    throw new Exception("comp_code傳入參數異常");
+                }
+                var result = _EFDATAContext.ViwHsoasales.AsQueryable();
+                result = result.Where(a => a.Com.Contains(comp_code));
+                if (result != null || result.Count()>0)
+                {
+                    
+                    actionResult= Ok(new ApiResult<object>(result));
+                }
+
+                    
+                //response = JsonConvert.SerializeObject(new ApiResult<object>(result));
             }
-            return Ok(result);
+            catch (Exception e)
+            {
+                //message = e.Message;
+                //resultData = NotFound( new ApiError("5555", message));
+                message = e.Message;
+                actionResult= NotFound(new ApiError("5555", message));
+            }
+            return actionResult;
         }
 
-        // GET api/<OOTempController>/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
+        [HttpGet("{comp_code}", Name = "KKKK")]
+        public IActionResult KKKK(string comp_code)
+        {
+
+            string message = string.Empty;
+            IActionResult? actionResult = null;
+            try
+            {
+                if (comp_code == "" || comp_code == null)
+                {
+                    throw new Exception("comp_code傳入參數異常");
+                }
+                var result = _EFDATAContext.ViwHsoasales.AsQueryable();
+                result = result.Where(a => a.Com.Contains(comp_code));
+                if (result != null || result.Count() > 0)
+                {
+
+                    actionResult = Ok(new ApiResult<object>(result));
+                }
+
+
+                //response = JsonConvert.SerializeObject(new ApiResult<object>(result));
+            }
+            catch (Exception e)
+            {
+                //message = e.Message;
+                //resultData = NotFound( new ApiError("5555", message));
+                message = e.Message;
+                actionResult = NotFound(new ApiError("5555", message));
+            }
+            return actionResult;
+        }
+
+        //post
+        [Route("SetSalesData")]
+        [HttpPost]
+        public IActionResult SetSalesData([FromBody] Class data)
+        {
+
+            string message = string.Empty;
+            IActionResult? actionResult = null;
+            try
+            {
+                if (data.Comp_code == "" || data.Comp_code == null)
+                {
+                    throw new Exception("comp_code傳入參數異常");
+                }
+                var result = _EFDATAContext.ViwHsoasales.AsQueryable();
+                result = result.Where(a => a.Com.Contains(data.Comp_code));
+                if (result != null || result.Count() > 0)
+                {
+
+                    actionResult = Ok(new ApiResult<object>(result));
+                }
+
+
+                //response = JsonConvert.SerializeObject(new ApiResult<object>(result));
+            }
+            catch (Exception e)
+            {
+                //message = e.Message;
+                //resultData = NotFound( new ApiError("5555", message));
+                message = e.Message;
+                actionResult = NotFound(new ApiError("5555", message));
+            }
+            return actionResult;
+        }
 
         // POST api/<OOTempController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        //[HttpPost]
+        //public void Post([FromBody] string value)
+        //{
+        //}
 
         // PUT api/<OOTempController>/5
         [HttpPut("{id}")]

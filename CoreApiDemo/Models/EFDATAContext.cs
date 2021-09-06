@@ -1188,10 +1188,10 @@ namespace CoreApiDemo.Models
 
                 entity.Property(e => e.ComName).HasMaxLength(50);
 
-                entity.Property(e => e.Market)
-                    .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
+                //entity.Property(e => e.Market)
+                //    .IsRequired()
+                //    .HasMaxLength(1)
+                //    .IsUnicode(false);
 
                 entity.Property(e => e.SalesName)
                     .IsRequired()
