@@ -26,42 +26,35 @@ namespace CoreApiDemo.Controllers
         {
             _EFDATAContext = EFDATAContext;
         }
-        // GET: api/<OOTempController>
-    
-        [HttpGet("{comp_code}", Name = "YYYY")]
-        public IActionResult YYYY(string comp_code)
+
+        [HttpGet("{comp_code}")]
+        public IActionResult GetCountryData(string comp_code)
         {
-            
             string message = string.Empty;
             IActionResult? actionResult =null;
             try
             {
-                if (comp_code == "" || comp_code == null)
+                var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select (a=>new ViewHsoasalesDTO {
+                Com=a.Com,
+                    ComName=a.ComName,
+                    Sales=a.Sales,
+                    SalesName=a.SalesName
+                }).ToList();
+                if (result==null || result.Count()<=0)
                 {
                     throw new Exception("comp_code傳入參數異常");
                 }
-                var result = _EFDATAContext.ViwHsoasales.AsQueryable();
-                result = result.Where(a => a.Com.Contains(comp_code));
-                if (result != null || result.Count()>0)
-                {
-                    
-                    actionResult= Ok(new ApiResult<object>(result));
-                }
-
-                    
-                //response = JsonConvert.SerializeObject(new ApiResult<object>(result));
+                actionResult= Ok(new ApiResult<object>(result));
             }
             catch (Exception e)
             {
-                //message = e.Message;
-                //resultData = NotFound( new ApiError("5555", message));
                 message = e.Message;
                 actionResult= NotFound(new ApiError("5555", message));
             }
             return actionResult;
         }
 
-        [HttpGet("{comp_code}", Name = "KKKK")]
+        [HttpPost]
         public IActionResult KKKK(string comp_code)
         {
 
