@@ -21,71 +21,134 @@ namespace CoreApiDemo.Controllers
     public class OOTempController : ControllerBase
     {
         private readonly EFDATAContext _EFDATAContext;
-        
+
         public OOTempController(EFDATAContext EFDATAContext)
         {
             _EFDATAContext = EFDATAContext;
         }
 
-        [HttpGet("{comp_code}")]
-        public IActionResult GetCountryData(string comp_code)
+        [HttpGet("{comp_code}")] //分公司營業員查詢
+        public IActionResult GetSalesData(string comp_code)
         {
-            string message = string.Empty;
-            IActionResult? actionResult =null;
-            try
-            {
-                var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select (a=>new ViewHsoasalesDTO {
-                Com=a.Com,
-                    ComName=a.ComName,
-                    Sales=a.Sales,
-                    SalesName=a.SalesName
-                }).ToList();
-                if (result==null || result.Count()<=0)
-                {
-                    throw new Exception("comp_code傳入參數異常");
-                }
-                actionResult= Ok(new ApiResult<object>(result));
-            }
-            catch (Exception e)
-            {
-                message = e.Message;
-                actionResult= NotFound(new ApiError("5555", message));
-            }
-            return actionResult;
-        }
-
-        [HttpPost]
-        public IActionResult KKKK(string comp_code)
-        {
-
             string message = string.Empty;
             IActionResult? actionResult = null;
             try
             {
-                if (comp_code == "" || comp_code == null)
+                var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a => new ViewHsoasalesDTO
+                {
+                    Com = a.Com,
+                    ComName = a.ComName,
+                    Sales = a.Sales,
+                    SalesName = a.SalesName
+                }).ToList();
+                if (result == null || result.Count() <= 0)
                 {
                     throw new Exception("comp_code傳入參數異常");
                 }
-                var result = _EFDATAContext.ViwHsoasales.AsQueryable();
-                result = result.Where(a => a.Com.Contains(comp_code));
-                if (result != null || result.Count() > 0)
-                {
-
-                    actionResult = Ok(new ApiResult<object>(result));
-                }
-
-
-                //response = JsonConvert.SerializeObject(new ApiResult<object>(result));
+                actionResult = Ok(new ApiResult<object>(result));
             }
             catch (Exception e)
             {
-                //message = e.Message;
-                //resultData = NotFound( new ApiError("5555", message));
                 message = e.Message;
                 actionResult = NotFound(new ApiError("5555", message));
             }
             return actionResult;
         }
+
+        //GetCountryData出生國家地區查詢
+
+        [HttpGet]
+        public IActionResult GetCountryData()
+        {
+            string message = string.Empty;
+            IActionResult? actionResult = null;
+            try
+            {
+                var result = _EFDATAContext.ViwHsoabirthCountries.Where(a => DateTime.Now >= (DateTime)(object)a.Sdate && DateTime.Now <= (DateTime)(object)a.Edate).Select(a => new ViwHsoabirthCountryDTO
+                {
+                    NationCode = a.Memo,
+                    NationName = a.ItemName,
+                    Seq = a.Seq
+
+                }).ToList();
+                if (result == null || result.Count() <= 0)
+                {
+                    throw new Exception();
+                }
+                actionResult = Ok(new ApiResult<object>(result));
+            }
+            catch (Exception e)
+            {
+                message = e.Message;
+                actionResult = NotFound(new ApiError("6666", message));
+            }
+            return actionResult;
+        }
+
+
+        [HttpGet]
+        public IActionResult GetApplyData(string comp_code, string user_id, string customer_id)
+        {
+            string message = string.Empty;
+            IActionResult? actionResult = null;
+            try
+            {
+                var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a => new ViewHsoasalesDTO
+                {
+                    Com = a.Com,
+                    ComName = a.ComName,
+                    Sales = a.Sales,
+                    SalesName = a.SalesName
+                }).ToList();
+                if (result == null || result.Count() <= 0)
+                {
+                    throw new Exception("comp_code傳入參數異常");
+                }
+                actionResult = Ok(new ApiResult<object>(result));
+            }
+            catch (Exception e)
+            {
+                message = e.Message;
+                actionResult = NotFound(new ApiError("5555", message));
+            }
+            return actionResult;
+        }
+
+
+        //GetApplyData
+
+        //[HttpPost]
+        //public IActionResult KKKK(string comp_code)
+        //{
+
+        //    string message = string.Empty;
+        //    IActionResult? actionResult = null;
+        //    try
+        //    {
+        //        if (comp_code == "" || comp_code == null)
+        //        {
+        //            throw new Exception("comp_code傳入參數異常");
+        //        }
+        //        var result = _EFDATAContext.ViwHsoasales.AsQueryable();
+        //        result = result.Where(a => a.Com.Contains(comp_code));
+        //        if (result != null || result.Count() > 0)
+        //        {
+
+        //            actionResult = Ok(new ApiResult<object>(result));
+        //        }
+
+
+        //        //response = JsonConvert.SerializeObject(new ApiResult<object>(result));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        //message = e.Message;
+        //        //resultData = NotFound( new ApiError("5555", message));
+        //        message = e.Message;
+        //        actionResult = NotFound(new ApiError("5555", message));
+        //    }
+        //    return actionResult;
+        //}
 
         //post
         [Route("SetSalesData")]

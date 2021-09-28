@@ -31,6 +31,8 @@ namespace CoreApiDemo.Models
         public virtual DbSet<TaSale> TaSales { get; set; }
         public virtual DbSet<TaxResidency> TaxResidencies { get; set; }
         public virtual DbSet<TxnBank> TxnBanks { get; set; }
+        public virtual DbSet<ViwHsoabirthCity> ViwHsoabirthCities { get; set; }
+        public virtual DbSet<ViwHsoabirthCountry> ViwHsoabirthCountries { get; set; }
         public virtual DbSet<ViwHsoasale> ViwHsoasales { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -39,7 +41,7 @@ namespace CoreApiDemo.Models
 //            {
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 //                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFDATA;Trusted_Connection=True");
-//            }
+            //}
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -1175,6 +1177,100 @@ namespace CoreApiDemo.Models
                     .HasComment("資料序號");
             });
 
+            modelBuilder.Entity<ViwHsoabirthCity>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("viw_HSOABirthCity");
+
+                entity.Property(e => e.ClassCode)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false)
+                    .HasColumnName("Class_Code");
+
+                entity.Property(e => e.ClassName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("Class_Name");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Edate)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("EDate");
+
+                entity.Property(e => e.ItemCode)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("Item_Code");
+
+                entity.Property(e => e.ItemName)
+                    .IsRequired()
+                    .HasMaxLength(60)
+                    .HasColumnName("Item_Name");
+
+                entity.Property(e => e.Memo)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sdate)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("SDate");
+            });
+
+            modelBuilder.Entity<ViwHsoabirthCountry>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("viw_HSOABirthCountry");
+
+                entity.Property(e => e.ClassCode)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false)
+                    .HasColumnName("Class_Code");
+
+                entity.Property(e => e.ClassName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("Class_Name");
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Edate)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("EDate");
+
+                entity.Property(e => e.ItemCode)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("Item_Code");
+
+                entity.Property(e => e.ItemName)
+                    .IsRequired()
+                    .HasMaxLength(60)
+                    .HasColumnName("Item_Name");
+
+                entity.Property(e => e.Memo)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sdate)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("SDate");
+            });
+
             modelBuilder.Entity<ViwHsoasale>(entity =>
             {
                 entity.HasNoKey();
@@ -1188,10 +1284,10 @@ namespace CoreApiDemo.Models
 
                 entity.Property(e => e.ComName).HasMaxLength(50);
 
-                //entity.Property(e => e.Market)
-                //    .IsRequired()
-                //    .HasMaxLength(1)
-                //    .IsUnicode(false);
+                entity.Property(e => e.Market)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SalesName)
                     .IsRequired()
