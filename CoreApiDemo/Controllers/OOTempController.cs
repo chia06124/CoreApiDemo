@@ -91,12 +91,9 @@ namespace CoreApiDemo.Controllers
             IActionResult? actionResult = null;
             try
             {
-                var result = _EFDATAContext.ViwHsoabirthCities.Where(a => DateTime.Now >= (DateTime)(object)a.Sdate && DateTime.Now <= (DateTime)(object)a.Edate).Select(a => new ViwHsoabirthCityDTO
-                {
-                    CityName = a.ItemName,
-                    Seq = a.Seq
-
-                }).ToList();
+                var result = from a in _EFDATAContext.ViwHsoabirthCities
+                             where DateTime.Now >= (DateTime)(object)a.Sdate && DateTime.Now <= (DateTime)(object)a.Edate
+                             select new  { CityName = a.ItemName, Seq = a.Seq };  //不會使用到ViwHsoabirthCityDTO
                 if (result == null || result.Count() <= 0)
                 {
                     throw new Exception();
