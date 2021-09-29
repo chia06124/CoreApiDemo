@@ -55,8 +55,7 @@ namespace CoreApiDemo.Controllers
             return actionResult;
         }
 
-        //GetCountryData出生國家地區查詢
-
+        
         [HttpGet]
         public IActionResult GetCountryData()
         {
@@ -85,6 +84,32 @@ namespace CoreApiDemo.Controllers
             return actionResult;
         }
 
+        [HttpGet]
+        public IActionResult GetCityData()
+        {
+            string message = string.Empty;
+            IActionResult? actionResult = null;
+            try
+            {
+                var result = _EFDATAContext.ViwHsoabirthCities.Where(a => DateTime.Now >= (DateTime)(object)a.Sdate && DateTime.Now <= (DateTime)(object)a.Edate).Select(a => new ViwHsoabirthCityDTO
+                {
+                    CityName = a.ItemName,
+                    Seq = a.Seq
+
+                }).ToList();
+                if (result == null || result.Count() <= 0)
+                {
+                    throw new Exception();
+                }
+                actionResult = Ok(new ApiResult<object>(result));
+            }
+            catch (Exception e)
+            {
+                message = e.Message;
+                actionResult = NotFound(new ApiError("7777", message));
+            }
+            return actionResult;
+        }
 
         [HttpGet]
         public IActionResult GetApplyData(string comp_code, string user_id, string customer_id)
