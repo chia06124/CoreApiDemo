@@ -214,5 +214,34 @@ namespace CoreApiDemo.Controllers
         public void Delete(int id)
         {
         }
+
+        [HttpGet]
+        public IEnumerable<O010000MDTO> HOHO()
+        {
+            //var result = (from aa in dbContext.OO010000_M 
+            //              select temp(aa));
+            var result = _EFDATAContext.O010000Ms.Select(a => temp(a));
+            return result.ToList();
+        }
+
+        private static O010000MDTO temp(O010000M a)
+        {
+            return new O010000MDTO
+            {
+                FormId = a.FormID,
+                FormNo = a.FormNo,
+                CustType = a.CustType,
+                Com = a.Com,
+                ComName = a.ComName,
+                DealAddr = a.DealAddr,
+                DealDate = a.DealDate,
+                DealUserId = a.DealUserId,
+                OpenSales = a.OpenSales,
+                OpenSalesName = a.OpenSalesName,
+                CustIdno = a.CustIDNo,
+                CreateUser = a.CreateUser,
+                CreateDate = a.CreateDate
+            };
+        }
     }
 }
