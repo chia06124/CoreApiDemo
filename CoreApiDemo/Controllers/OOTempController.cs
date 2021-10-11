@@ -188,7 +188,7 @@ namespace CoreApiDemo.Controllers
             return actionResult;
         }
 
-        [HttpPut]
+        [HttpPut] 
         public IActionResult putApply([FromBody]O010000M data)
         {
             string message = string.Empty;
