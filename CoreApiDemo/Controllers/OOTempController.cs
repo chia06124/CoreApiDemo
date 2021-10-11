@@ -24,7 +24,7 @@ namespace CoreApiDemo.Controllers
     {
         private readonly EFDATAContext _EFDATAContext;
         private readonly IMapper _mapper;
-        public OOTempController(EFDATAContext EFDATAContext,IMapper mapper)
+        public OOTempController(EFDATAContext EFDATAContext, IMapper mapper)
         {
             _EFDATAContext = EFDATAContext;
             _mapper = mapper;
@@ -37,7 +37,7 @@ namespace CoreApiDemo.Controllers
             IActionResult? actionResult = null;
             try
             {
-                var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a =>a).ToList();
+                var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a => a).ToList();
                 var map = _mapper.Map<IEnumerable<ViewHsoasalesDTO>>(result);
                 if (map == null || map.Count() <= 0)
                 {
@@ -53,7 +53,7 @@ namespace CoreApiDemo.Controllers
             return actionResult;
         }
 
-        
+
         [HttpGet]
         public IActionResult GetCountryData()
         {
@@ -92,7 +92,7 @@ namespace CoreApiDemo.Controllers
             {
                 var result = from a in _EFDATAContext.ViwHsoabirthCities
                              where DateTime.Now >= (DateTime)(object)a.Sdate && DateTime.Now <= (DateTime)(object)a.Edate
-                             select new  { CityName = a.ItemName, Seq = a.Seq };  //不會使用到ViwHsoabirthCityDTO
+                             select new { CityName = a.ItemName, Seq = a.Seq };  //不會使用到ViwHsoabirthCityDTO
                 if (result == null || result.Count() <= 0)
                 {
                     throw new Exception();
@@ -148,7 +148,7 @@ namespace CoreApiDemo.Controllers
                 {
                     throw new Exception("FormNo傳入參數異常");
                 }
-                
+
                 O010000M objO010000M = new O010000M();
                 objO010000M.FormID = data.FormID;
                 objO010000M.FormNo = data.FormNo;
@@ -176,7 +176,7 @@ namespace CoreApiDemo.Controllers
                     _EFDATAContext.SaveChanges();
 
                 }
-                
+
                 actionResult = Ok(new ApiResult<object>(data));
 
             }
@@ -188,92 +188,22 @@ namespace CoreApiDemo.Controllers
             return actionResult;
         }
 
-        [HttpPost]  //欄位手動mapping
-        public IActionResult SetApplyDatabak([FromBody] SetApplyDadaParameter data)
+        [HttpPut]
+        public IActionResult putApply([FromBody]O010000M data)
         {
-
             string message = string.Empty;
             IActionResult? actionResult = null;
             try
             {
-                if (data.FormNo == null)
+                var result = (from a in _EFDATAContext.O010000Ms
+                              where a.FormID == data.FormID && a.FormNo == data.FormNo
+                              select a).FirstOrDefault();
+                if (result != null)
                 {
-                    throw new Exception("FormNo傳入參數異常");
+                    result.ComName = data.ComName;
+                    result.DealAddr = data.DealAddr;
+                    _EFDATAContext.SaveChanges();
                 }
-                O010000M objO010000M = new O010000M();
-                objO010000M.FormID = data.FormID;
-                objO010000M.FormNo = data.FormNo;
-                objO010000M.CustType = data.CustType;
-                objO010000M.Com = data.Com;
-                objO010000M.ComName = data.ComName;
-                objO010000M.DealAddr = data.DealAddr;
-                objO010000M.DealDate = data.DealDate;
-                objO010000M.DealUserId = data.DealUserId;
-                objO010000M.OpenSales = data.OpenSales;
-                objO010000M.OpenSalesName = data.OpenSalesName;
-                objO010000M.CustIdno = data.CustIdno;
-                objO010000M.CreateUser = "Lily1010";
-                objO010000M.CreateDate = DateTime.Now;
-                _EFDATAContext.Add(objO010000M);
-                _EFDATAContext.SaveChanges();
-
-                CusBaseDatum objCusBaseDatum = new CusBaseDatum();
-                objCusBaseDatum.FormId = data.FormID;
-                objCusBaseDatum.FormNo = data.FormNo;
-                objCusBaseDatum.CustIdno = data.CustIdno;
-                objCusBaseDatum.CustTaxId = data.CustTaxId;
-                objCusBaseDatum.CustName = data.CustName;
-                objCusBaseDatum.CustEngName = data.CustEngName;
-                objCusBaseDatum.Birthday = data.Birthday;
-                objCusBaseDatum.Gender = data.Gender;
-                objCusBaseDatum.Nationality = data.Nationality;
-                objCusBaseDatum.BirthCountry = data.BirthCountry;
-                objCusBaseDatum.BirthCity = data.BirthCity;
-                objCusBaseDatum.Edu = data.Edu;
-                objCusBaseDatum.JobOcc = data.JobOcc;
-                objCusBaseDatum.JobOccDesc = data.JobOccDesc;
-                objCusBaseDatum.Company = data.Company;
-                objCusBaseDatum.Position = data.Position;
-                objCusBaseDatum.RegZip = data.RegZip;
-                objCusBaseDatum.RegAddr = data.RegAddr;
-                objCusBaseDatum.ComZip = data.ComZip;
-                objCusBaseDatum.ComAddr = data.ComAddr;
-                objCusBaseDatum.ResiAddr = data.ResiAddr;
-                objCusBaseDatum.Mphone = data.Mphone;
-                objCusBaseDatum.RegTelArea = data.RegTelArea;
-                objCusBaseDatum.RegTelNumber = data.RegTelNumber;
-                objCusBaseDatum.ComTelArea = data.CompTelArea;
-                objCusBaseDatum.ComTelNumber = data.CompTelNumber;
-                objCusBaseDatum.CompTelArea = data.CompTelArea;
-                objCusBaseDatum.CompTelNumber = data.CompTelNumber;
-                objCusBaseDatum.CompTelExt = data.CompTelExt;
-                objCusBaseDatum.FaxArea = data.FaxArea;
-                objCusBaseDatum.FaxNumber = data.FaxNumber;
-                objCusBaseDatum.Email = data.Email;
-                objCusBaseDatum.DocWay = data.DocWay;
-                objCusBaseDatum.CustClass = data.CustClass;
-                objCusBaseDatum.CreateUser = "Lily1010";
-                objCusBaseDatum.CreateDate = DateTime.Now;
-                _EFDATAContext.Add(objCusBaseDatum);
-                _EFDATAContext.SaveChanges();
-
-
-                foreach (var TaxResidency in data.TaxResidencyData)
-                {
-                    TaxResidency objTaxResidency = new TaxResidency();
-                    objTaxResidency.FormId = data.FormID;
-                    objTaxResidency.FormNo = data.FormNo;
-                    objTaxResidency.NationCode = TaxResidency.NationCode;
-                    objTaxResidency.NationName = TaxResidency.NationName;
-                    objTaxResidency.TaxId = TaxResidency.TaxId;
-                    objTaxResidency.ReasonId = TaxResidency.ReasonId;
-                    objTaxResidency.ReasonDesc = TaxResidency.ReasonDesc;
-                    objTaxResidency.CreateUser = "Lily1010";
-                    objTaxResidency.CreateDate = DateTime.Now;
-                    _EFDATAContext.Add(objTaxResidency);
-
-                }
-                _EFDATAContext.SaveChanges();
                 actionResult = Ok(new ApiResult<object>(data));
             }
             catch (Exception e)
@@ -282,36 +212,136 @@ namespace CoreApiDemo.Controllers
                 actionResult = NotFound(new ApiError("8888", message));
             }
             return actionResult;
+            
         }
 
 
-        [HttpGet]
-        public IEnumerable<O010000MDTO> HOHO()
-        {
-            //var result = (from aa in dbContext.OO010000_M 
-            //              select temp(aa));
-            var result = _EFDATAContext.O010000Ms.Select(a => temp(a));
-            return result.ToList();
-        }
 
-        private static O010000MDTO temp(O010000M a)
+
+    [HttpPost]  //POST 欄位手動mapping
+    public IActionResult SetApplyDatabak([FromBody] SetApplyDadaParameter data)
+    {
+
+        string message = string.Empty;
+        IActionResult? actionResult = null;
+        try
         {
-            return new O010000MDTO
+            if (data.FormNo == null)
             {
-                FormId = a.FormID,
-                FormNo = a.FormNo,
-                CustType = a.CustType,
-                Com = a.Com,
-                ComName = a.ComName,
-                DealAddr = a.DealAddr,
-                DealDate = a.DealDate,
-                DealUserId = a.DealUserId,
-                OpenSales = a.OpenSales,
-                OpenSalesName = a.OpenSalesName,
-                CustIdno = a.CustIdno,
-                CreateUser = a.CreateUser,
-                CreateDate = a.CreateDate
-            };
+                throw new Exception("FormNo傳入參數異常");
+            }
+            O010000M objO010000M = new O010000M();
+            objO010000M.FormID = data.FormID;
+            objO010000M.FormNo = data.FormNo;
+            objO010000M.CustType = data.CustType;
+            objO010000M.Com = data.Com;
+            objO010000M.ComName = data.ComName;
+            objO010000M.DealAddr = data.DealAddr;
+            objO010000M.DealDate = data.DealDate;
+            objO010000M.DealUserId = data.DealUserId;
+            objO010000M.OpenSales = data.OpenSales;
+            objO010000M.OpenSalesName = data.OpenSalesName;
+            objO010000M.CustIdno = data.CustIdno;
+            objO010000M.CreateUser = "Lily1010";
+            objO010000M.CreateDate = DateTime.Now;
+            _EFDATAContext.Add(objO010000M);
+            _EFDATAContext.SaveChanges();
+
+            CusBaseDatum objCusBaseDatum = new CusBaseDatum();
+            objCusBaseDatum.FormId = data.FormID;
+            objCusBaseDatum.FormNo = data.FormNo;
+            objCusBaseDatum.CustIdno = data.CustIdno;
+            objCusBaseDatum.CustTaxId = data.CustTaxId;
+            objCusBaseDatum.CustName = data.CustName;
+            objCusBaseDatum.CustEngName = data.CustEngName;
+            objCusBaseDatum.Birthday = data.Birthday;
+            objCusBaseDatum.Gender = data.Gender;
+            objCusBaseDatum.Nationality = data.Nationality;
+            objCusBaseDatum.BirthCountry = data.BirthCountry;
+            objCusBaseDatum.BirthCity = data.BirthCity;
+            objCusBaseDatum.Edu = data.Edu;
+            objCusBaseDatum.JobOcc = data.JobOcc;
+            objCusBaseDatum.JobOccDesc = data.JobOccDesc;
+            objCusBaseDatum.Company = data.Company;
+            objCusBaseDatum.Position = data.Position;
+            objCusBaseDatum.RegZip = data.RegZip;
+            objCusBaseDatum.RegAddr = data.RegAddr;
+            objCusBaseDatum.ComZip = data.ComZip;
+            objCusBaseDatum.ComAddr = data.ComAddr;
+            objCusBaseDatum.ResiAddr = data.ResiAddr;
+            objCusBaseDatum.Mphone = data.Mphone;
+            objCusBaseDatum.RegTelArea = data.RegTelArea;
+            objCusBaseDatum.RegTelNumber = data.RegTelNumber;
+            objCusBaseDatum.ComTelArea = data.CompTelArea;
+            objCusBaseDatum.ComTelNumber = data.CompTelNumber;
+            objCusBaseDatum.CompTelArea = data.CompTelArea;
+            objCusBaseDatum.CompTelNumber = data.CompTelNumber;
+            objCusBaseDatum.CompTelExt = data.CompTelExt;
+            objCusBaseDatum.FaxArea = data.FaxArea;
+            objCusBaseDatum.FaxNumber = data.FaxNumber;
+            objCusBaseDatum.Email = data.Email;
+            objCusBaseDatum.DocWay = data.DocWay;
+            objCusBaseDatum.CustClass = data.CustClass;
+            objCusBaseDatum.CreateUser = "Lily1010";
+            objCusBaseDatum.CreateDate = DateTime.Now;
+            _EFDATAContext.Add(objCusBaseDatum);
+            _EFDATAContext.SaveChanges();
+
+
+            foreach (var TaxResidency in data.TaxResidencyData)
+            {
+                TaxResidency objTaxResidency = new TaxResidency();
+                objTaxResidency.FormId = data.FormID;
+                objTaxResidency.FormNo = data.FormNo;
+                objTaxResidency.NationCode = TaxResidency.NationCode;
+                objTaxResidency.NationName = TaxResidency.NationName;
+                objTaxResidency.TaxId = TaxResidency.TaxId;
+                objTaxResidency.ReasonId = TaxResidency.ReasonId;
+                objTaxResidency.ReasonDesc = TaxResidency.ReasonDesc;
+                objTaxResidency.CreateUser = "Lily1010";
+                objTaxResidency.CreateDate = DateTime.Now;
+                _EFDATAContext.Add(objTaxResidency);
+
+            }
+            _EFDATAContext.SaveChanges();
+            actionResult = Ok(new ApiResult<object>(data));
         }
+        catch (Exception e)
+        {
+            message = e.Message;
+            actionResult = NotFound(new ApiError("8888", message));
+        }
+        return actionResult;
     }
+
+
+    [HttpGet]
+    public IEnumerable<O010000MDTO> HOHO()
+    {
+        //var result = (from aa in dbContext.OO010000_M 
+        //              select temp(aa));
+        var result = _EFDATAContext.O010000Ms.Select(a => temp(a));
+        return result.ToList();
+    }
+
+    private static O010000MDTO temp(O010000M a)
+    {
+        return new O010000MDTO
+        {
+            FormId = a.FormID,
+            FormNo = a.FormNo,
+            CustType = a.CustType,
+            Com = a.Com,
+            ComName = a.ComName,
+            DealAddr = a.DealAddr,
+            DealDate = a.DealDate,
+            DealUserId = a.DealUserId,
+            OpenSales = a.OpenSales,
+            OpenSalesName = a.OpenSalesName,
+            CustIdno = a.CustIdno,
+            CreateUser = a.CreateUser,
+            CreateDate = a.CreateDate
+        };
+    }
+}
 }
