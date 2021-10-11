@@ -31,7 +31,7 @@ namespace CoreApiDemo
         {
             services.AddControllers();
             services.AddDbContext<EFDATAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EFDatabase")));
-            //services.AddAutoMapper(typeof(Startup));//註冊 AutoMapper 服務
+            services.AddAutoMapper(typeof(Startup)); //註冊 AutoMapper 服務
 
             //services.AddScoped<IDbConnection, SqlConnection>(serviceProvider => {
             //    SqlConnection conn = new SqlConnection();

@@ -27,6 +27,7 @@ namespace CoreApiDemo.Models
         public virtual DbSet<Sbkdatum> Sbkdata { get; set; }
         public virtual DbSet<Smsdatum> Smsdata { get; set; }
         public virtual DbSet<SysCodeMap> SysCodeMaps { get; set; }
+        public virtual DbSet<SysFormDatum> SysFormData { get; set; }
         public virtual DbSet<TaCompany> TaCompanies { get; set; }
         public virtual DbSet<TaSale> TaSales { get; set; }
         public virtual DbSet<TaxResidency> TaxResidencies { get; set; }
@@ -37,11 +38,11 @@ namespace CoreApiDemo.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-//            if (!optionsBuilder.IsConfigured)
-//            {
+            if (!optionsBuilder.IsConfigured)
+            {
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
 //                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EFDATA;Trusted_Connection=True");
-            //}
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -644,14 +645,14 @@ namespace CoreApiDemo.Models
 
             modelBuilder.Entity<O010000M>(entity =>
             {
-                entity.HasKey(e => new { e.FormId, e.FormNo })
+                entity.HasKey(e => new { e.FormID, e.FormNo })
                     .HasName("PK_OO010000_M");
 
                 entity.ToTable("O010000_M");
 
                 entity.HasComment("場外開戶_案件資料");
 
-                entity.Property(e => e.FormId)
+                entity.Property(e => e.FormID)
                     .HasMaxLength(10)
                     .IsUnicode(false)
                     .HasColumnName("FormID")
@@ -931,11 +932,63 @@ namespace CoreApiDemo.Models
                 entity.Property(e => e.Memo)
                     .IsRequired()
                     .HasMaxLength(500)
-                    .IsUnicode(false)
                     .HasDefaultValueSql("('')")
                     .HasComment("備註");
 
                 entity.Property(e => e.Seq).HasComment("排序");
+            });
+
+            modelBuilder.Entity<SysFormDatum>(entity =>
+            {
+                entity.HasKey(e => new { e.FormId, e.FormNo });
+
+                entity.ToTable("sysFormData");
+
+                entity.Property(e => e.FormId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("FormID")
+                    .HasDefaultValueSql("('')")
+                    .HasComment("表單代號");
+
+                entity.Property(e => e.FormNo)
+                    .HasMaxLength(12)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')")
+                    .HasComment("表單單號");
+
+                entity.Property(e => e.Com)
+                    .IsRequired()
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')")
+                    .HasComment("表單所屬之公司別");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())")
+                    .HasComment("最近更新時間");
+
+                entity.Property(e => e.CreateUser)
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')")
+                    .HasComment("建檔人或執行程式");
+
+                entity.Property(e => e.Dept)
+                    .IsRequired()
+                    .HasMaxLength(6)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')")
+                    .HasComment("表單所屬之部門別");
+
+                entity.Property(e => e.FormStatus)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')")
+                    .HasComment("表單狀態(簽核中、已結案、已刪除)");
             });
 
             modelBuilder.Entity<TaCompany>(entity =>

@@ -7,7 +7,7 @@ namespace CoreApiDemo.Models
 {
     public partial class O010000M
     {
-        public string FormId { get; set; }
+        public string FormID { get; set; }
         public string FormNo { get; set; }
         public string CustType { get; set; }
         public string Com { get; set; }
