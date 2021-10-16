@@ -10,9 +10,9 @@ namespace CoreApiDemo.DTO
         //= null!;可為null
         public string FormID { get; set; } = null!;
         public string FormNo { get; set; } = null!;
-        public object EnableOpenType { get; set; } = null!;
-        public object OpenType { get; set; } = null!;
-        public int CustType { get; set; }
+        //public object EnableOpenType { get; set; } = null!;
+        //public object OpenType { get; set; } = null!;
+        public string CustType { get; set; } = null!;
         public string Com { get; set; } = null!;
         public string ComName { get; set; } = null!;
         public string DealAddr { get; set; } = null!;
@@ -26,8 +26,8 @@ namespace CoreApiDemo.DTO
         public string Nationality { get; set; } = null!;
         public string BirthCountry { get; set; } = null!;
         public string BirthCity { get; set; } = null!;
-        public int Edu { get; set; }
-        public string EduDesc { get; set; } = null!;
+        public string Edu { get; set; } = null;
+        //public string EduDesc { get; set; } = null!;
         public int JobOcc { get; set; }
         public string JobOccDesc { get; set; } = null!;
         public string Company { get; set; } = null!;
@@ -48,7 +48,7 @@ namespace CoreApiDemo.DTO
         public string FaxArea { get; set; } = null!;
         public string FaxNumber { get; set; } = null!;
         public string EMail { get; set; } = null!;
-        public object RelationData { get; set; } = null!;
+        //public object RelationData { get; set; } = null!;
 
     }
 }
