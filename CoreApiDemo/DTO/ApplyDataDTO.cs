@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreApiDemo.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +49,7 @@ namespace CoreApiDemo.DTO
         public string FaxArea { get; set; } = null!;
         public string FaxNumber { get; set; } = null!;
         public string EMail { get; set; } = null!;
-        //public object RelationData { get; set; } = null!;
+        public List<Futdatum> FutdatumData { get; set; } = null!;
 
     }
 }

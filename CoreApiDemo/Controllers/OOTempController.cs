@@ -107,18 +107,18 @@ namespace CoreApiDemo.Controllers
             return actionResult;
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetApplyData(GetApplyDataPatameter data)
         {
             string message = string.Empty;
             IActionResult? actionResult = null;
             try
             {
+                
                 var result = from a in _EFDATAContext.O010000Ms
-                             from c in _EFDATAContext.CusBaseData
-                             where a.FormID == c.FormId && a.FormNo == c.FormNo
-                             && a.Com == data.comp_code && c.CustIdno == data.customer_id
-                             select new ApplyDataDTO
+                             join c in _EFDATAContext.CusBaseData on new { a.FormID, a.FormNo } equals new { c.FormID, c.FormNo }
+                              where a.Com == data.comp_code && c.CustIdno == data.customer_id
+                              select new ApplyDataDTO
                              {
                                  FormID = a.FormID,
                                  FormNo = a.FormNo,
@@ -152,8 +152,25 @@ namespace CoreApiDemo.Controllers
                                  CompTelExt = c.CompTelExt,
                                  FaxArea = c.FaxArea,
                                  FaxNumber = c.FaxNumber,
-                                 EMail = c.Email
-                             };
+                                 EMail = c.Email,
+                                 FutdatumData = (from d in _EFDATAContext.Futdata
+                                                 where a.FormID == d.FormId && a.FormNo==d.FormNo
+                                                 select new Futdatum
+                                                {
+                                                    FormId=d.FormId,
+                                                    FormNo=d.FormNo,
+                                                    EtradingFlag=d.EtradingFlag,
+                                                    SettlementWay=d.SettlementWay,
+                                                    MarginCallTrading=d.MarginCallTrading,
+                                                    MarketPrice=d.MarketPrice,
+                                                    MarginEway=d.MarginEway,
+                                                    SignDocVer=d.SignDocVer,
+                                                    CreateUser=d.CreateUser,
+                                                    CreateDate=d.CreateDate,
+                                                    HonStockFlag=d.HonStockFlag,
+                                                    HonTradingFlag=d.HonTradingFlag
+                                                }).ToList()
+                              };
                 //var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a => new ViewHsoasalesDTO
                 //{
                 //    Com = a.Com,
@@ -163,10 +180,10 @@ namespace CoreApiDemo.Controllers
                 //}).ToList();
 
 
-                //if (result == null || result.Count() <= 0)
-                //{
-                //    throw new Exception("comp_code傳入參數異常");
-                //}
+                if (result == null || result.Count() <= 0)
+                {
+                    throw new Exception("comp_code傳入參數異常");
+                }
                 actionResult = Ok(new ApiResult<object>(result));
             }
             catch (Exception e)
@@ -200,7 +217,7 @@ namespace CoreApiDemo.Controllers
                 _EFDATAContext.SaveChanges();
 
                 CusBaseDatum objCusBaseDatum = new CusBaseDatum();
-                objCusBaseDatum.FormId = objO010000M.FormID;
+                objCusBaseDatum.FormID = objO010000M.FormID;
                 objCusBaseDatum.FormNo = objO010000M.FormNo;
                 objCusBaseDatum.CreateUser = "Lily1010";
                 objCusBaseDatum.CreateDate = DateTime.Now;
@@ -291,7 +308,7 @@ namespace CoreApiDemo.Controllers
                 _EFDATAContext.SaveChanges();
 
                 CusBaseDatum objCusBaseDatum = new CusBaseDatum();
-                objCusBaseDatum.FormId = data.FormID;
+                objCusBaseDatum.FormID = data.FormID;
                 objCusBaseDatum.FormNo = data.FormNo;
                 objCusBaseDatum.CustIdno = data.CustIdno;
                 objCusBaseDatum.CustTaxId = data.CustTaxId;

@@ -7,7 +7,7 @@ namespace CoreApiDemo.Models
 {
     public partial class CusBaseDatum
     {
-        public string FormId { get; set; }
+        public string FormID { get; set; }
         public string FormNo { get; set; }
         public string CustIdno { get; set; }
         public string CustTaxId { get; set; }

@@ -8,7 +8,7 @@ namespace CoreApiDemo.Models
     public partial class CusRelation
     {
         public int CusRelationId { get; set; }
-        public string FormId { get; set; }
+        public string FormID { get; set; }
         public string FormNo { get; set; }
         public string RelationType { get; set; }
         public int RelationSerial { get; set; }

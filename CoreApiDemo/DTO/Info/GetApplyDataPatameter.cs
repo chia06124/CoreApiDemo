@@ -9,5 +9,6 @@ namespace CoreApiDemo.DTO.Info
     {
         public string comp_code { get; set; } = null!;
         public string customer_id { get; set; } = null!;
+
     }
 }
