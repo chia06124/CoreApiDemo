@@ -8,6 +8,7 @@ using AutoMapper;
 using CoreApiDemo.DTO;
 using CoreApiDemo.DTO.Info;
 using CoreApiDemo.Models;
+using CoreApiDemo.Models.Repository;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,13 +38,15 @@ namespace CoreApiDemo.Controllers
             IActionResult? actionResult = null;
             try
             {
-                var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a => a).ToList();
-                var map = _mapper.Map<IEnumerable<ViewHsoasalesDTO>>(result);
-                if (map == null || map.Count() <= 0)
+                //var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a => a).ToList();
+                //var map = _mapper.Map<IEnumerable<ViewHsoasalesDTO>>(result);
+                SalesDataRepository _SalesDataRepository = new SalesDataRepository();
+                var result =_SalesDataRepository.GetData(_EFDATAContext, _mapper, comp_code);
+                if (result == null || result.Count() <= 0)
                 {
                     throw new Exception("comp_code傳入參數異常");
                 }
-                actionResult = Ok(new ApiResult<object>(map));
+                actionResult = Ok(new ApiResult<object>(result));
             }
             catch (Exception e)
             {
@@ -114,7 +117,6 @@ namespace CoreApiDemo.Controllers
             IActionResult? actionResult = null;
             try
             {
-                
                 var result = from a in _EFDATAContext.O010000Ms
                              join c in _EFDATAContext.CusBaseData on new { a.FormID, a.FormNo } equals new { c.FormID, c.FormNo }
                               where a.Com == data.comp_code && c.CustIdno == data.customer_id
@@ -178,12 +180,6 @@ namespace CoreApiDemo.Controllers
                 //    Sales = a.Sales,
                 //    SalesName = a.SalesName
                 //}).ToList();
-
-
-                if (result == null || result.Count() <= 0)
-                {
-                    throw new Exception("comp_code傳入參數異常");
-                }
                 actionResult = Ok(new ApiResult<object>(result));
             }
             catch (Exception e)
