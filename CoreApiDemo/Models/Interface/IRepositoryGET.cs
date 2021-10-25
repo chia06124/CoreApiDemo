@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace CoreApiDemo.Models.Interface
 {
-    interface ISalesDataRepository
+    public interface IRepositoryGET<TEntity>
     {
-        IEnumerable<ViewHsoasalesDTO> GetData(EFDATAContext context, IMapper mapper, string data);
+        IEnumerable<TEntity> GetData(EFDATAContext context, IMapper _mapper, string data);
     }
 }

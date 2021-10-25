@@ -8,6 +8,7 @@ using AutoMapper;
 using CoreApiDemo.DTO;
 using CoreApiDemo.DTO.Info;
 using CoreApiDemo.Models;
+using CoreApiDemo.Models.Interface;
 using CoreApiDemo.Models.Repository;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
@@ -32,20 +33,19 @@ namespace CoreApiDemo.Controllers
         }
 
         [HttpGet("{comp_code}")] //分公司營業員查詢
-        public IActionResult GetSalesData(string comp_code)
+        public IActionResult GetSalesData(string? comp_code=null)
         {
             string message = string.Empty;
             IActionResult? actionResult = null;
+            
             try
             {
-                //var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a => a).ToList();
-                //var map = _mapper.Map<IEnumerable<ViewHsoasalesDTO>>(result);
-                SalesDataRepository _SalesDataRepository = new SalesDataRepository();
-                var result =_SalesDataRepository.GetData(_EFDATAContext, _mapper, comp_code);
-                if (result == null || result.Count() <= 0)
+                if (comp_code == null)
                 {
                     throw new Exception("comp_code傳入參數異常");
                 }
+                IRepositoryGET<ViewHsoasalesDTO> ViewHsoasales = new GenericRepository<ViewHsoasalesDTO>();
+                var result = ViewHsoasales.GetData(_EFDATAContext, _mapper, comp_code);
                 actionResult = Ok(new ApiResult<object>(result));
             }
             catch (Exception e)

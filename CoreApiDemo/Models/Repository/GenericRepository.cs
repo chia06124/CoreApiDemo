@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CoreApiDemo.DTO;
 using CoreApiDemo.Models.Interface;
 using System;
 using System.Collections.Generic;
@@ -8,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace CoreApiDemo.Models.Repository
 {
-    public class SalesDataRepository: ISalesDataRepository
+    
+    public class GenericRepository<TEntity> : IRepositoryGET<TEntity>
     {
-        public IEnumerable<ViewHsoasalesDTO> GetData(EFDATAContext _EFDATAContext, IMapper _mapper, string comp_code)
+        public IEnumerable<TEntity> GetData(EFDATAContext _EFDATAContext, IMapper _mapper,string comp_code)
         {
             var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a => a).ToList();
-            var map = _mapper.Map<IEnumerable<ViewHsoasalesDTO>>(result);
+            var map = _mapper.Map<IEnumerable<TEntity>>(result);
             return map;
         }
     }
