@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace CoreApiDemo.Models.Interface
 {
-    public interface IRepositoryGET<TEntity>
+    public interface IRepository<TEntity>
     {
-        IEnumerable<TEntity> GetData(EFDATAContext context, IMapper _mapper, string data);
+        IEnumerable<TEntity> GetById(EFDATAContext _EFDATAContext,  string data);
+        IEnumerable<TEntity> GetAll(EFDATAContext _EFDATAContext);
     }
 }

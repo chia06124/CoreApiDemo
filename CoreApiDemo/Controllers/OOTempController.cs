@@ -44,8 +44,8 @@ namespace CoreApiDemo.Controllers
                 {
                     throw new Exception("comp_code傳入參數異常");
                 }
-                IRepositoryGET<ViewHsoasalesDTO> ViewHsoasales = new GenericRepository<ViewHsoasalesDTO>();
-                var result = ViewHsoasales.GetData(_EFDATAContext, _mapper, comp_code);
+                IRepository<ViewHsoasalesDTO> ViewHsoasales = new SalesDataRepository<ViewHsoasalesDTO>();
+                var result = ViewHsoasales.GetById(_EFDATAContext, comp_code);
                 actionResult = Ok(new ApiResult<object>(result));
             }
             catch (Exception e)
@@ -64,13 +64,8 @@ namespace CoreApiDemo.Controllers
             IActionResult? actionResult = null;
             try
             {
-                var result = _EFDATAContext.ViwHsoabirthCountries.Where(a => DateTime.Now >= (DateTime)(object)a.Sdate && DateTime.Now <= (DateTime)(object)a.Edate).Select(a => new ViwHsoabirthCountryDTO
-                {
-                    NationCode = a.Memo,
-                    NationName = a.ItemName,
-                    Seq = a.Seq
-
-                }).ToList();
+                IRepository<ViwHsoabirthCountryDTO> ViwHsoabirthCity = new CountryDataRepository<ViwHsoabirthCountryDTO>();
+                var result = ViwHsoabirthCity.GetAll(_EFDATAContext);
                 if (result == null || result.Count() <= 0)
                 {
 
