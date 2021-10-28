@@ -44,8 +44,8 @@ namespace CoreApiDemo.Controllers
                 {
                     throw new Exception("comp_code傳入參數異常");
                 }
-                IRepository<ViewHsoasalesDTO> ViewHsoasales = new SalesDataRepository<ViewHsoasalesDTO>();
-                var result = ViewHsoasales.GetById(_EFDATAContext, comp_code);
+                IRepository<ViewHsoasalesDTO> _ViewHsoasales = new SalesDataRepository<ViewHsoasalesDTO>();
+                var result = _ViewHsoasales.GetById(_EFDATAContext, comp_code);
                 actionResult = Ok(new ApiResult<object>(result));
             }
             catch (Exception e)
@@ -64,8 +64,8 @@ namespace CoreApiDemo.Controllers
             IActionResult? actionResult = null;
             try
             {
-                IRepository<ViwHsoabirthCountryDTO> ViwHsoabirthCity = new CountryDataRepository<ViwHsoabirthCountryDTO>();
-                var result = ViwHsoabirthCity.GetAll(_EFDATAContext);
+                IRepository<ViwHsoabirthCountryDTO> _ViwHsoabirthCountry = new CountryDataRepository<ViwHsoabirthCountryDTO>();
+                var result = _ViwHsoabirthCountry.GetAll(_EFDATAContext);
                 if (result == null || result.Count() <= 0)
                 {
 
@@ -88,9 +88,8 @@ namespace CoreApiDemo.Controllers
             IActionResult? actionResult = null;
             try
             {
-                var result = from a in _EFDATAContext.ViwHsoabirthCities
-                             where DateTime.Now >= (DateTime)(object)a.Sdate && DateTime.Now <= (DateTime)(object)a.Edate
-                             select new { CityName = a.ItemName, Seq = a.Seq };  //不會使用到ViwHsoabirthCityDTO
+                IRepository<ViwHsoabirthCityDTO> _ViwHsoabirthCityDTO = new CityDataRepository<ViwHsoabirthCityDTO>();
+                var result = _ViwHsoabirthCityDTO.GetAll(_EFDATAContext);
                 if (result == null || result.Count() <= 0)
                 {
                     throw new Exception();
