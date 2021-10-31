@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoreApiDemo.DTO;
@@ -105,76 +106,16 @@ namespace CoreApiDemo.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetApplyData(GetApplyDataPatameter data)
+        public IActionResult GetApplyData(JsonElement data)
         {
             string message = string.Empty;
             IActionResult? actionResult = null;
             try
             {
-                var result = from a in _EFDATAContext.O010000Ms
-                             join c in _EFDATAContext.CusBaseData on new { a.FormID, a.FormNo } equals new { c.FormID, c.FormNo }
-                              where a.Com == data.comp_code && c.CustIdno == data.customer_id
-                              select new ApplyDataDTO
-                             {
-                                 FormID = a.FormID,
-                                 FormNo = a.FormNo,
-                                 CustType = a.CustType,
-                                 Com = a.Com,
-                                 ComName = a.ComName,
-                                 DealAddr = a.DealAddr,
-                                 OpenSales = a.OpenSales,
-                                 OpenSalesName = a.OpenSalesName,
-                                 CustTaxID = c.CustIdno,
-                                 CustName = c.CustName,
-                                 Birthday = c.Birthday,
-                                 Gender = c.Gender,
-                                 Nationality = c.Nationality,
-                                 BirthCountry = c.BirthCountry,
-                                 BirthCity = c.BirthCity,
-                                 Edu = c.Edu,
-                                 JobOccDesc = c.JobOccDesc,
-                                 Company = c.Company,
-                                 Position = c.Position,
-                                 RegZip = c.RegZip,
-                                 RegAddr = c.RegAddr,
-                                 ComZip = c.ComZip,
-                                 ComAddr = c.ComAddr,
-                                 ResiAddr = c.ResiAddr,
-                                 MPhone = c.Mphone,
-                                 RegTelArea = c.RegTelArea,
-                                 RegTelNumber = c.RegTelNumber,
-                                 ComTelArea = c.ComTelArea,
-                                 ComTelNumber = c.ComTelNumber,
-                                 CompTelExt = c.CompTelExt,
-                                 FaxArea = c.FaxArea,
-                                 FaxNumber = c.FaxNumber,
-                                 EMail = c.Email,
-                                 FutdatumData = (from d in _EFDATAContext.Futdata
-                                                 where a.FormID == d.FormId && a.FormNo==d.FormNo
-                                                 select new Futdatum
-                                                {
-                                                    FormId=d.FormId,
-                                                    FormNo=d.FormNo,
-                                                    EtradingFlag=d.EtradingFlag,
-                                                    SettlementWay=d.SettlementWay,
-                                                    MarginCallTrading=d.MarginCallTrading,
-                                                    MarketPrice=d.MarketPrice,
-                                                    MarginEway=d.MarginEway,
-                                                    SignDocVer=d.SignDocVer,
-                                                    CreateUser=d.CreateUser,
-                                                    CreateDate=d.CreateDate,
-                                                    HonStockFlag=d.HonStockFlag,
-                                                    HonTradingFlag=d.HonTradingFlag
-                                                }).ToList()
-                              };
-                //var result = _EFDATAContext.ViwHsoasales.Where(a => a.Com.Contains(comp_code)).Select(a => new ViewHsoasalesDTO
-                //{
-                //    Com = a.Com,
-                //    ComName = a.ComName,
-                //    Sales = a.Sales,
-                //    SalesName = a.SalesName
-                //}).ToList();
+                IRepositoryObject<O010000MDTO> _O010000M = new O010000MRepository<O010000MDTO>();
+                var result = _O010000M.GetAll(_EFDATAContext, data);
                 actionResult = Ok(new ApiResult<object>(result));
+
             }
             catch (Exception e)
             {
@@ -366,7 +307,7 @@ namespace CoreApiDemo.Controllers
 
 
         [HttpGet]
-        public IEnumerable<O010000MDTO> HOHO()
+        public IEnumerable<O010000MDTO_Temp> HOHO()
         {
             //var result = (from aa in dbContext.OO010000_M 
             //              select temp(aa));
@@ -374,9 +315,9 @@ namespace CoreApiDemo.Controllers
             return result.ToList();
         }
 
-        private static O010000MDTO temp(O010000M a)
+        private static O010000MDTO_Temp temp(O010000M a)
         {
-            return new O010000MDTO
+            return new O010000MDTO_Temp
             {
                 FormId = a.FormID,
                 FormNo = a.FormNo,
