@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -127,7 +128,7 @@ namespace CoreApiDemo.Controllers
 
 
         [HttpPost] //欄位內建函式mapping
-        public IActionResult SetApplyData([FromBody] SetApplyDadaParameter data)
+        public IActionResult SetApplyData([FromBody] O010000MDTO data)
         {
 
             string message = string.Empty;
@@ -138,37 +139,9 @@ namespace CoreApiDemo.Controllers
                 {
                     throw new Exception("FormNo傳入參數異常");
                 }
-
-                O010000M objO010000M = new O010000M();
-                objO010000M.FormID = data.FormID;
-                objO010000M.FormNo = data.FormNo;
-                objO010000M.CreateUser = "Lily1010";
-                objO010000M.CreateDate = DateTime.Now;
-                _EFDATAContext.Add(objO010000M).CurrentValues.SetValues(data);
-                _EFDATAContext.SaveChanges();
-
-                CusBaseDatum objCusBaseDatum = new CusBaseDatum();
-                objCusBaseDatum.FormID = objO010000M.FormID;
-                objCusBaseDatum.FormNo = objO010000M.FormNo;
-                objCusBaseDatum.CreateUser = "Lily1010";
-                objCusBaseDatum.CreateDate = DateTime.Now;
-                _EFDATAContext.Add(objCusBaseDatum).CurrentValues.SetValues(data);
-                _EFDATAContext.SaveChanges();
-
-                foreach (var objTaxResidency in data.TaxResidencyData)
-                {
-                    TaxResidency oTaxResidency = new TaxResidency();
-                    objTaxResidency.FormId = data.FormID;
-                    objTaxResidency.FormNo = data.FormNo;
-                    objTaxResidency.CreateUser = "Lily1010";
-                    objTaxResidency.CreateDate = DateTime.Now.AddDays(2);
-                    _EFDATAContext.TaxResidencies.Add(oTaxResidency).CurrentValues.SetValues(objTaxResidency);
-                    _EFDATAContext.SaveChanges();
-
-                }
-
-                actionResult = Ok(new ApiResult<object>(data));
-
+                IRepositoryObject<O010000MDTO> _O010000M = new O010000MRepository<O010000MDTO>();
+                var result = _O010000M.SetData(_EFDATAContext, data);
+                actionResult = Ok(new ApiResult<object>(result));
             }
             catch (Exception e)
             {
@@ -282,12 +255,12 @@ namespace CoreApiDemo.Controllers
                 foreach (var TaxResidency in data.TaxResidencyData)
                 {
                     TaxResidency objTaxResidency = new TaxResidency();
-                    objTaxResidency.FormId = data.FormID;
+                    objTaxResidency.FormID = data.FormID;
                     objTaxResidency.FormNo = data.FormNo;
                     objTaxResidency.NationCode = TaxResidency.NationCode;
                     objTaxResidency.NationName = TaxResidency.NationName;
-                    objTaxResidency.TaxId = TaxResidency.TaxId;
-                    objTaxResidency.ReasonId = TaxResidency.ReasonId;
+                    objTaxResidency.TaxID = TaxResidency.TaxID;
+                    objTaxResidency.ReasonID = TaxResidency.ReasonID;
                     objTaxResidency.ReasonDesc = TaxResidency.ReasonDesc;
                     objTaxResidency.CreateUser = "Lily1010";
                     objTaxResidency.CreateDate = DateTime.Now;

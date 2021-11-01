@@ -29,7 +29,7 @@ namespace CoreApiDemo.DTO.Info
         public string BirthCountry { get; set; } = null!;
         public string? BirthCity { get; set; } = null!;
         public string Edu { get; set; } = null!;
-        public string JobOcc { get; set; } = null!;
+        public int JobOcc { get; set; }
         public string JobOccDesc { get; set; } = null!;
         public string Company { get; set; } = null!;
         public string Position { get; set; } = null!;

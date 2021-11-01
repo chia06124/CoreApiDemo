@@ -532,14 +532,14 @@ namespace CoreApiDemo.Models
 
             modelBuilder.Entity<Futdatum>(entity =>
             {
-                entity.HasKey(e => new { e.FormId, e.FormNo })
+                entity.HasKey(e => new { e.FormID, e.FormNo })
                     .HasName("PK_OO_FUTData");
 
                 entity.ToTable("FUTData");
 
                 entity.HasComment("場外開戶_期貨資料檔");
 
-                entity.Property(e => e.FormId)
+                entity.Property(e => e.FormID)
                     .HasMaxLength(10)
                     .IsUnicode(false)
                     .HasColumnName("FormID")
@@ -1132,7 +1132,7 @@ namespace CoreApiDemo.Models
                     .HasDefaultValueSql("('')")
                     .HasComment("建檔人員");
 
-                entity.Property(e => e.FormId)
+                entity.Property(e => e.FormID)
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false)
@@ -1160,13 +1160,13 @@ namespace CoreApiDemo.Models
                     .HasMaxLength(50)
                     .HasComment("無法提供稅籍編號原因其他說明");
 
-                entity.Property(e => e.ReasonId)
+                entity.Property(e => e.ReasonID)
                     .HasMaxLength(2)
                     .IsUnicode(false)
                     .HasColumnName("ReasonID")
                     .HasComment("無法提供稅籍編號原因代碼");
 
-                entity.Property(e => e.TaxId)
+                entity.Property(e => e.TaxID)
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasColumnName("TaxID")

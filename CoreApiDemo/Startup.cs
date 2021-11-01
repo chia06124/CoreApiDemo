@@ -31,6 +31,7 @@ namespace CoreApiDemo
         {
             services.AddControllers();
             services.AddDbContext<EFDATAContext>(options => options.UseSqlServer(Configuration.GetConnectionString("EFDatabase")));
+            services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null); //回傳Json維持欄位大小寫一致
             services.AddAutoMapper(typeof(Startup)); //註冊 AutoMapper 服務
 
             //services.AddScoped<IDbConnection, SqlConnection>(serviceProvider => {

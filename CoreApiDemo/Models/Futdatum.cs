@@ -7,7 +7,7 @@ namespace CoreApiDemo.Models
 {
     public partial class Futdatum
     {
-        public string FormId { get; set; }
+        public string FormID { get; set; }
         public string FormNo { get; set; }
         public string EtradingFlag { get; set; }
         public string SettlementWay { get; set; }

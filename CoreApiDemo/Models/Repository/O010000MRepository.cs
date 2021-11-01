@@ -52,25 +52,58 @@ namespace CoreApiDemo.Models.Repository
                              FaxArea = c.FaxArea,
                              FaxNumber = c.FaxNumber,
                              EMail = c.Email,
-                             FutdatumData = (from d in _EFDATAContext.Futdata
-                                             where a.FormID == d.FormId && a.FormNo == d.FormNo
-                                             select new Futdatum
-                                             {
-                                                 FormId = d.FormId,
-                                                 FormNo = d.FormNo,
-                                                 EtradingFlag = d.EtradingFlag,
-                                                 SettlementWay = d.SettlementWay,
-                                                 MarginCallTrading = d.MarginCallTrading,
-                                                 MarketPrice = d.MarketPrice,
-                                                 MarginEway = d.MarginEway,
-                                                 SignDocVer = d.SignDocVer,
-                                                 CreateUser = d.CreateUser,
-                                                 CreateDate = d.CreateDate,
-                                                 HonStockFlag = d.HonStockFlag,
-                                                 HonTradingFlag = d.HonTradingFlag
-                                             }).ToList()
+                             TaxResidencyData = (from d in _EFDATAContext.TaxResidencies
+                                                 where a.FormID == d.FormID && a.FormNo == d.FormNo
+                                                 select new TaxResidency
+                                                 {
+                                                     FormID = d.FormID,
+                                                     FormNo = d.FormNo,
+                                                     NationCode = d.NationCode,
+                                                     NationName = d.NationName,
+                                                     TaxID = d.TaxID,
+                                                     ReasonID = d.ReasonID,
+                                                     ReasonDesc = d.ReasonDesc,
+                                                     CreateUser = d.CreateUser,
+                                                     CreateDate = d.CreateDate
+                                                 }).ToList()
                          };
             return (IEnumerable<TEntity>)result;
         }
+
+        public Object SetData(EFDATAContext _EFDATAContext, TEntity data)
+        {
+            
+            O010000M objO010000M = new O010000M();
+            O010000MDTO? dataValue = data as O010000MDTO; //賦予物件
+            objO010000M.FormID = dataValue.FormID;
+            objO010000M.FormNo = dataValue.FormNo;
+            objO010000M.CreateUser = "Lily1101";
+            objO010000M.CreateDate = DateTime.Now;
+            _EFDATAContext.O010000Ms.Add(objO010000M).CurrentValues.SetValues(dataValue);
+            _EFDATAContext.SaveChanges();
+
+            CusBaseDatum objCusBaseDatum = new CusBaseDatum();
+            objCusBaseDatum.FormID = objO010000M.FormID;
+            objCusBaseDatum.FormNo = objO010000M.FormNo;
+            objCusBaseDatum.CreateUser = "Lily1101";
+            objCusBaseDatum.CreateDate = DateTime.Now;
+            _EFDATAContext.Add(objCusBaseDatum).CurrentValues.SetValues(dataValue);
+            _EFDATAContext.SaveChanges();
+
+            foreach (var objTaxResidency in dataValue.TaxResidencyData)
+            {
+                TaxResidency oTaxResidency = new TaxResidency();
+                objTaxResidency.FormID = dataValue.FormID;
+                objTaxResidency.FormNo = dataValue.FormNo;
+                objTaxResidency.CreateUser = "Lily1101";
+                objTaxResidency.CreateDate = DateTime.Now.AddDays(2);
+                _EFDATAContext.TaxResidencies.Add(oTaxResidency).CurrentValues.SetValues(objTaxResidency);
+                _EFDATAContext.SaveChanges();
+
+            }
+
+            return dataValue;
+        }
+        
     }
 }

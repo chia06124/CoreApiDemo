@@ -19,7 +19,7 @@ namespace CoreApiDemo.Models
         public string BirthCountry { get; set; }
         public string BirthCity { get; set; }
         public string Edu { get; set; }
-        public string JobOcc { get; set; }
+        public int JobOcc { get; set; }
         public string JobOccDesc { get; set; }
         public string Company { get; set; }
         public string Position { get; set; }

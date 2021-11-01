@@ -10,5 +10,6 @@ namespace CoreApiDemo.Models.Interface
     public interface IRepositoryObject<TEntity>
     {
         IEnumerable<TEntity> GetAll(EFDATAContext _EFDATAContext, JsonElement data);
+        Object SetData(EFDATAContext _EFDATAContext, TEntity data);
     }
 }
